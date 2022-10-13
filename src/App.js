@@ -1,31 +1,33 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
 
 function App() {
-  const dummyMovies = [
-    {
-      id: 1,
-      title: 'Some Dummy Movie',
-      openingText: 'This is the opening text of the movie',
-      releaseDate: '2021-05-18',
-    },
-    {
-      id: 2,
-      title: 'Some Dummy Movie 2',
-      openingText: 'This is the second opening text of the movie',
-      releaseDate: '2021-05-19',
-    },
-  ];
+   const [car , setCar] = useState([])
+  function fetchCarHandler(){
+     fetch('https://swapi.dev/api/starships/').then((response)=>{
+      return response.json();
+     }).then((data)=>{
+      const transformedCar = data.results.map((carData) =>{
+        return {
+          id:carData.model,
+          title:carData.name,
+          openingText: carData.manufacturer,
+          releaseData:carData.length
+        }
+      })
+          setCar(transformedCar)
+     })
+  }
 
   return (
     <React.Fragment>
       <section>
-        <button>Fetch Movies</button>
+        <button onClick={fetchCarHandler}> Fetch car data</button>
       </section>
       <section>
-        <MoviesList movies={dummyMovies} />
+        <MoviesList movies={car} />
       </section>
     </React.Fragment>
   );
